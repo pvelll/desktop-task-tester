@@ -22,8 +22,10 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.koin.core)
-            implementation(libs.koin.koin.compose.viewmodel)
+            implementation(libs.koin.compose.viewmodel)
             implementation(libs.koin.logger.slf4j)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.cio)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

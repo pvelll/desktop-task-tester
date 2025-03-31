@@ -10,7 +10,9 @@ import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 
 fun main() = application {
-    startKoin(KoinApplication.init())
+    startKoin{
+        modules()
+    }
     Window(
         onCloseRequest = ::exitApplication,
         title = stringResource(Res.string.app_name),
