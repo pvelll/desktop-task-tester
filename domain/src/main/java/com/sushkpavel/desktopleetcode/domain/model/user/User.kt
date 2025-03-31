@@ -1,4 +1,4 @@
-package com.sushkpavel.desktopleetcode.domain.model
+package com.sushkpavel.desktopleetcode.domain.model.user
 
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
@@ -10,7 +10,7 @@ data class User(
     val username: String,
     val email: String,
     val passwordHash: String,
-    val role: Role = Role.USER, // Роль по умолчанию
+    val role: Role,
     @Contextual val createdAt: Instant? = null,
     @Contextual val updatedAt: Instant? = null
 )

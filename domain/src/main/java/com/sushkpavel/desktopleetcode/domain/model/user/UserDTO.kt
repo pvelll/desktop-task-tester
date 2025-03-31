@@ -1,4 +1,4 @@
-package com.sushkpavel.desktopleetcode.domain.model
+package com.sushkpavel.desktopleetcode.domain.model.user
 
 import kotlinx.serialization.Serializable
 
