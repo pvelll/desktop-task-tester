@@ -24,8 +24,8 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.koin.logger.slf4j)
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.cio)
+            implementation(project(":data"))
+            implementation(project(":domain"))
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

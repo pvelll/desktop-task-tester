@@ -1,5 +1,6 @@
 plugins {
     id("java-library")
+    alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.jetbrainsKotlinJvm)
 }
 java {
@@ -12,4 +13,12 @@ kotlin {
     }
 }
 
-
+dependencies{
+    implementation(project(":domain"))
+    implementation(libs.koin.core)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.cio)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json.client)
+    implementation(libs.kotlinx.serialization.json.jvm)
+}
