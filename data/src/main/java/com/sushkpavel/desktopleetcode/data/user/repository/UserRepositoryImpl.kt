@@ -31,6 +31,7 @@ class UserRepositoryImpl(override val client: HttpClient) : NetworkRepository(cl
                 }
             }
         )
+
     }
 
     override suspend fun register(user: UserDTO): Int? {
