@@ -26,7 +26,7 @@ fun main() = application {
     CoroutineScope(Dispatchers.IO).launch {
         val rep = userRepository.login(
             Credentials(
-                email = "admin@exampl.com",
+                email = "admin@example.com",
                 passwordHash = "hashedpassword123"
             )
         )

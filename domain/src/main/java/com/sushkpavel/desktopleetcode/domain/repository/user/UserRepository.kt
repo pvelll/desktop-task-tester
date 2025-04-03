@@ -10,10 +10,9 @@ import com.sushkpavel.desktopleetcode.domain.model.user.UserDTO
 interface UserRepository {
     suspend fun login(credentials: Credentials): ApiResult<Token>
     suspend fun logout(tokenValue: String) : ApiResult<NotifyMessage>
-    suspend fun register(user: UserDTO): Int?
-    suspend fun getById(id: Int): User?
-    suspend fun update(id: Int, user: User)
-    suspend fun getUserByEmail(email: String) : User?
-    suspend fun delete(id: Int)
-    suspend fun getTokenByValue(token : String) : Token?
+    suspend fun register(user: UserDTO): ApiResult<NotifyMessage>
+    suspend fun getById(id: Int): ApiResult<User>
+    suspend fun update(id: Int, user: User): ApiResult<NotifyMessage>
+    suspend fun getUserByEmail(email: String) : ApiResult<User?>
+    suspend fun delete(id: Int, token : String) : ApiResult<NotifyMessage>
 }
