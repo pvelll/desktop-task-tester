@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
 }
 
+
 kotlin {
     jvm("desktop")
 
@@ -24,10 +25,14 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.koin.logger.slf4j)
+
+            implementation(libs.compose.code.editor)
+
             implementation(project(":data"))
             implementation(project(":domain"))
         }
         desktopMain.dependencies {
+
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
         }

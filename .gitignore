@@ -5,11 +5,13 @@
 xcuserdata
 !src/**/build/
 local.properties
+github.properties
 .idea
 .DS_Store
 captures
 .externalNativeBuild
 .cxx
+
 *.xcodeproj/*
 !*.xcodeproj/project.pbxproj
 !*.xcodeproj/xcshareddata/

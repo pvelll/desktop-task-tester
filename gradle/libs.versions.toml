@@ -8,6 +8,8 @@ koin-version = "4.0.0"
 ktor_version="3.1.0"
 jetbrains-kotlin-jvm = "2.1.10"
 serialization = "1.8.0"
+codeeditor="3.0.5"
+#codeeditor="2.0.3"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -25,7 +27,8 @@ ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor_vers
 kotlinx-serialization-json-jvm = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json-jvm", version.ref = "serialization" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor-version" }
 ktor-serialization-kotlinx-json-client = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor-version" }
-
+compose-code-editor = {module = "com.wakaztahir:codeeditor", version.ref="codeeditor"}
+#compose-code-editor = {module = "com.github.qawaz:compose-code-editor", version.ref="codeeditor"}
 
 [plugins]
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
