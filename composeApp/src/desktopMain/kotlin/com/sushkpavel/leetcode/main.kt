@@ -4,7 +4,9 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import com.sushkpavel.desktopleetcode.data.dataModule
 import com.sushkpavel.desktopleetcode.data.user.repository.UserRepositoryImpl
+import com.sushkpavel.desktopleetcode.domain.model.task.Difficulty
 import com.sushkpavel.desktopleetcode.domain.model.user.Credentials
+import com.sushkpavel.desktopleetcode.domain.repository.task.TaskRepository
 import com.sushkpavel.desktopleetcode.domain.repository.user.UserRepository
 import com.sushkpavel.leetcode.presentation.App
 import desktopleetcode.composeapp.generated.resources.Res
@@ -21,6 +23,7 @@ fun main() = application {
         modules(dataModule)
     }
     val userRepository by inject<UserRepository>(UserRepository::class.java)
+    val taskRepository by inject<TaskRepository>(TaskRepository::class.java)
     CoroutineScope(Dispatchers.IO).launch {
         val rep = userRepository.login(
             Credentials(
@@ -28,7 +31,9 @@ fun main() = application {
                 passwordHash = "hashedpassword123"
             )
         )
+        val task = taskRepository.getTask(Difficulty.HARD)
         println(rep)
+        println(task)
     }
     Window(
         onCloseRequest = ::exitApplication,

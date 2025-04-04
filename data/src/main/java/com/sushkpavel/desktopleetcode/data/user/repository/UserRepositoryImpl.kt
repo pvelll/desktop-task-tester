@@ -1,6 +1,7 @@
 package com.sushkpavel.desktopleetcode.data.user.repository
 
 import com.sushkpavel.desktopleetcode.data.repository.NetworkRepository
+import com.sushkpavel.desktopleetcode.data.user.UserApiGateway
 import com.sushkpavel.desktopleetcode.domain.model.ApiResult
 import com.sushkpavel.desktopleetcode.domain.model.NotifyMessage
 import com.sushkpavel.desktopleetcode.domain.model.user.Credentials
@@ -20,7 +21,7 @@ class UserRepositoryImpl(override val client: HttpClient) : NetworkRepository(cl
     override suspend fun login(credentials: Credentials): ApiResult<Token> {
         return executeRequest<Token, NotifyMessage>(
             method = HttpMethod.Post,
-            url = "$USER_API_GATEWAY/login",
+            url = UserApiGateway.LOGIN,
             configureRequest = { setBody(credentials) }
         )
     }
@@ -28,7 +29,7 @@ class UserRepositoryImpl(override val client: HttpClient) : NetworkRepository(cl
     override suspend fun logout(tokenValue: String): ApiResult<NotifyMessage> {
         return executeRequest<NotifyMessage, NotifyMessage>(
             method = HttpMethod.Post,
-            url = "$USER_API_GATEWAY/logout",
+            url = UserApiGateway.LOGOUT,
             configureRequest = {
                 headers {
                     append(HttpHeaders.Authorization, "Bearer $tokenValue")
@@ -41,7 +42,7 @@ class UserRepositoryImpl(override val client: HttpClient) : NetworkRepository(cl
     override suspend fun register(user: UserDTO): ApiResult<NotifyMessage> {
         return executeRequest<NotifyMessage, NotifyMessage>(
             method = HttpMethod.Post,
-            url = "$USER_API_GATEWAY/register",
+            url = UserApiGateway.REGISTER,
             configureRequest = {
                 setBody(user)
             }
@@ -51,7 +52,7 @@ class UserRepositoryImpl(override val client: HttpClient) : NetworkRepository(cl
     override suspend fun getById(id: Int): ApiResult<User> {
         return executeRequest<User, NotifyMessage>(
             method = HttpMethod.Get,
-            url = "$USER_API_GATEWAY/users",
+            url = UserApiGateway.USERS,
             configureRequest = {
                 parameter("id", id)
             }
@@ -61,7 +62,7 @@ class UserRepositoryImpl(override val client: HttpClient) : NetworkRepository(cl
     override suspend fun update(id: Int, user: User): ApiResult<NotifyMessage> {
         return executeRequest<NotifyMessage, NotifyMessage>(
             method = HttpMethod.Put,
-            url = "$USER_API_GATEWAY/users",
+            url = UserApiGateway.USERS,
             configureRequest = {
                 parameter("id", id)
                 setBody(user)
@@ -76,7 +77,7 @@ class UserRepositoryImpl(override val client: HttpClient) : NetworkRepository(cl
     override suspend fun delete(id: Int, token : String): ApiResult<NotifyMessage> {
         return executeRequest<NotifyMessage, NotifyMessage>(
             method = HttpMethod.Delete,
-            url = "$USER_API_GATEWAY/users",
+            url = UserApiGateway.USERS,
             configureRequest = {
                 parameter("id", id)
                 headers {

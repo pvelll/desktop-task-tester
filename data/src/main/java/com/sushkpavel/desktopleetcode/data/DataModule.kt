@@ -1,6 +1,8 @@
 package com.sushkpavel.desktopleetcode.data
 
+import com.sushkpavel.desktopleetcode.data.tasks.repository.TaskRepositoryImpl
 import com.sushkpavel.desktopleetcode.data.user.repository.UserRepositoryImpl
+import com.sushkpavel.desktopleetcode.domain.repository.task.TaskRepository
 import com.sushkpavel.desktopleetcode.domain.repository.user.UserRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
@@ -21,5 +23,7 @@ val dataModule = module{
     single<UserRepository>{
         UserRepositoryImpl(get())
     }
-
+    single<TaskRepository>{
+        TaskRepositoryImpl(get())
+    }
 }
