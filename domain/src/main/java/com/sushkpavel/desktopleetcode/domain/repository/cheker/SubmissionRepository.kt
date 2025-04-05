@@ -5,5 +5,5 @@ import com.sushkpavel.desktopleetcode.domain.model.submission.SubmissionRequest
 import com.sushkpavel.desktopleetcode.domain.model.submission.TestResult
 
 interface SubmissionRepository {
-    suspend fun submitSolution(submissionRequest: SubmissionRequest) : ApiResult<TestResult>
+    suspend fun submitSolution(submissionRequest: SubmissionRequest, token : String) : ApiResult<TestResult>
 }

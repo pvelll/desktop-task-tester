@@ -1,7 +1,9 @@
 package com.sushkpavel.desktopleetcode.data
 
+import com.sushkpavel.desktopleetcode.data.subbmission.repository.SubmissionRepositoryImpl
 import com.sushkpavel.desktopleetcode.data.tasks.repository.TaskRepositoryImpl
 import com.sushkpavel.desktopleetcode.data.user.repository.UserRepositoryImpl
+import com.sushkpavel.desktopleetcode.domain.repository.cheker.SubmissionRepository
 import com.sushkpavel.desktopleetcode.domain.repository.task.TaskRepository
 import com.sushkpavel.desktopleetcode.domain.repository.user.UserRepository
 import io.ktor.client.HttpClient
@@ -25,5 +27,8 @@ val dataModule = module{
     }
     single<TaskRepository>{
         TaskRepositoryImpl(get())
+    }
+    single<SubmissionRepository>{
+        SubmissionRepositoryImpl(get())
     }
 }
