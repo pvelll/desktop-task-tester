@@ -94,7 +94,11 @@ fun LoginScreen(
                 )
 
                 Button(
-                    onClick = { viewModel.onLoginClicked() },
+                    onClick = {
+                        viewModel.onLoginClicked(onSucces = {
+//                        navHostController.navigate()
+                        })
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(44.dp),

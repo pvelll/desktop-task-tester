@@ -35,7 +35,7 @@ class LoginViewModel(
         )
     }
 
-    fun onLoginClicked() {
+    fun onLoginClicked(onSuccess: () -> Unit) {
         viewModelScope.launch {
             val result = loginUseCase(
                 Credentials(
@@ -43,9 +43,8 @@ class LoginViewModel(
                     _screenState.value.password
                 )
             )
-
             if (result is ApiResult.Success) {
-                TODO("task screen navigation")
+                onSuccess()
             } else {
                 _screenState.value = _screenState.value.copy(
                     errorMessage = "Login failed"
