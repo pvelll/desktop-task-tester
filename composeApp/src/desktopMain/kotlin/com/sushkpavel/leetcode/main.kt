@@ -7,6 +7,8 @@ import com.sushkpavel.desktopleetcode.domain.model.task.Difficulty
 import com.sushkpavel.desktopleetcode.domain.model.user.Credentials
 import com.sushkpavel.desktopleetcode.domain.repository.task.TaskRepository
 import com.sushkpavel.desktopleetcode.domain.repository.user.UserRepository
+import com.sushkpavel.leetcode.di.useCaseModule
+import com.sushkpavel.leetcode.di.viewModelModule
 import com.sushkpavel.leetcode.presentation.App
 import com.wakaztahir.codeeditor.model.CodeLang
 import desktopleetcode.composeapp.generated.resources.Res
@@ -20,22 +22,9 @@ import org.koin.java.KoinJavaComponent.inject
 
 fun main() = application {
     startKoin {
-        modules(dataModule)
+        modules(dataModule, useCaseModule, viewModelModule)
     }
-    val userRepository by inject<UserRepository>(UserRepository::class.java)
-    val taskRepository by inject<TaskRepository>(TaskRepository::class.java)
-    CoroutineScope(Dispatchers.IO).launch {
-        val rep = userRepository.login(
-            Credentials(
-                email = "admin@example.com",
-                passwordHash = "hashedpassword123"
-            )
-        )
 
-        val task = taskRepository.getTask(Difficulty.HARD)
-        println(rep)
-        println(task)
-    }
 
     Window(
         onCloseRequest = ::exitApplication,

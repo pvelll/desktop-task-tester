@@ -9,7 +9,8 @@ ktor_version="3.1.0"
 jetbrains-kotlin-jvm = "2.1.10"
 serialization = "1.8.0"
 codeeditor="3.0.5"
-#codeeditor="2.0.3"
+navigation="2.8.0-alpha10"
+compose = "1.7.6"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -28,7 +29,8 @@ kotlinx-serialization-json-jvm = { module = "org.jetbrains.kotlinx:kotlinx-seria
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor-version" }
 ktor-serialization-kotlinx-json-client = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor-version" }
 compose-code-editor = {module = "com.wakaztahir:codeeditor", version.ref="codeeditor"}
-#compose-code-editor = {module = "com.github.qawaz:compose-code-editor", version.ref="codeeditor"}
+navigation-compose = {module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref="navigation"}
+material-icons-extended = {module = "org.jetbrains.compose.material:material-icons-extended", version.ref="compose-multiplatform"}
 
 [plugins]
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
