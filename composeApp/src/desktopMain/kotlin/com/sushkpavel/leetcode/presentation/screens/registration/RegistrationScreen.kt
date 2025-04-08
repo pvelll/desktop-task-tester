@@ -1,4 +1,4 @@
-package com.sushkpavel.leetcode.presentation.screens.login
+package com.sushkpavel.leetcode.presentation.screens.registration
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,16 +22,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.sushkpavel.leetcode.presentation.navigation.routes.Routes
 import com.sushkpavel.leetcode.presentation.util.CustomClickableText
-import org.koin.compose.viewmodel.koinViewModel
 import com.sushkpavel.leetcode.presentation.util.CustomTextInputField
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun LoginScreen(
-    viewModel: LoginViewModel = koinViewModel(),
-    navHostController: NavHostController = rememberNavController()
+fun RegistrationScreen(
+    viewModel: RegistrationViewModel = koinViewModel(),
+    navHostController: NavHostController
 ) {
     val screenState by viewModel.screenState
 
@@ -80,6 +79,21 @@ fun LoginScreen(
                 )
 
                 CustomTextInputField(
+                    value = screenState.email,
+                    onValueChange = { viewModel.onEmailChanged(it) },
+                    label = "Username",
+                    placeholder = "berezkina228",
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Email,
+                            contentDescription = null,
+                            tint = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+                        )
+                    },
+                    isError = screenState.errorMessage.isNotEmpty(),
+                    modifier = Modifier.fillMaxWidth()
+                )
+                CustomTextInputField(
                     value = screenState.password,
                     onValueChange = { viewModel.onPasswordChanged(it) },
                     label = "Password",
@@ -112,14 +126,15 @@ fun LoginScreen(
                 ) {
                     Text("Continue", style = MaterialTheme.typography.button)
                 }
+
+
             }
             CustomClickableText(
-                text = "Don't have an account?",
+                text = "Already have an account?",
                 onClick = {
-                    navHostController.navigate(Routes.ScreenRegistration)
+                    navHostController.navigate(Routes.ScreenLogin)
                 }
             )
-
             if (screenState.errorMessage.isNotEmpty()) {
                 Text(
                     text = screenState.errorMessage,
@@ -127,6 +142,7 @@ fun LoginScreen(
                     style = MaterialTheme.typography.caption
                 )
             }
+
         }
     }
 }
