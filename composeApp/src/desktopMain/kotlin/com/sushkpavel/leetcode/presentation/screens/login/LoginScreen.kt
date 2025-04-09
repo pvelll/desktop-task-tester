@@ -99,6 +99,7 @@ fun LoginScreen(
                     onClick = {
                         viewModel.onLoginClicked(onSuccess = {
 //                        navHostController.navigate()
+                            println("success")
                         })
                     },
                     modifier = Modifier

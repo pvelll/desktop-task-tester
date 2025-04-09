@@ -14,6 +14,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.runtime.Composable
@@ -79,13 +80,13 @@ fun RegistrationScreen(
                 )
 
                 CustomTextInputField(
-                    value = screenState.email,
-                    onValueChange = { viewModel.onEmailChanged(it) },
+                    value = screenState.username,
+                    onValueChange = { viewModel.onUsernameCahnged(it) },
                     label = "Username",
                     placeholder = "berezkina228",
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.Default.Email,
+                            imageVector = Icons.Default.AccountCircle,
                             contentDescription = null,
                             tint = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
                         )
@@ -111,8 +112,8 @@ fun RegistrationScreen(
 
                 Button(
                     onClick = {
-                        viewModel.onLoginClicked(onSuccess = {
-//                        navHostController.navigate()
+                        viewModel.onRegisterClicked(onSuccess = {
+                            navHostController.navigate(Routes.ScreenLogin)
                         })
                     },
                     modifier = Modifier

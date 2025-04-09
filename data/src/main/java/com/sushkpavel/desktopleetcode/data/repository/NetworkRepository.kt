@@ -30,7 +30,12 @@ abstract class NetworkRepository(open val client: HttpClient) {
 
             when (response.status) {
                 HttpStatusCode.OK -> handleSuccess(response.body())
-                else -> handleError(response.body())
+                else ->
+                    try {
+                        handleError(response.body())
+                    } catch (e: Exception) {
+                        ApiResult.Error("Unknown error: ${response.status}")
+                    }
             }
         } catch (e: ClientRequestException) {
             ApiResult.Error(e.response.body())

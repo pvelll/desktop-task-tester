@@ -6,4 +6,5 @@ import kotlinx.serialization.Serializable
 sealed class Routes {
     @Serializable data object ScreenLogin : Routes()
     @Serializable data object ScreenRegistration : Routes()
+    @Serializable data object TaskScreen : Routes()
 }

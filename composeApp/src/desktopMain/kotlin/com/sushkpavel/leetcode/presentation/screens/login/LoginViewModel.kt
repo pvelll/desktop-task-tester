@@ -5,8 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sushkpavel.desktopleetcode.domain.model.ApiResult
+import com.sushkpavel.desktopleetcode.domain.model.NotifyMessage
 import com.sushkpavel.desktopleetcode.domain.model.user.Credentials
 import com.sushkpavel.desktopleetcode.domain.usecase.user.LoginUseCase
+import com.sushkpavel.leetcode.presentation.util.hash.sha256
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
@@ -40,15 +42,20 @@ class LoginViewModel(
             val result = loginUseCase(
                 Credentials(
                     _screenState.value.email,
-                    _screenState.value.password
+                    sha256(_screenState.value.password)
                 )
             )
-            if (result is ApiResult.Success) {
-                onSuccess()
-            } else {
-                _screenState.value = _screenState.value.copy(
-                    errorMessage = "Login failed"
-                )
+            when (result) {
+                is ApiResult.Success -> {
+                    onSuccess()
+                }
+                is ApiResult.Error -> {
+                    val errorMessage = (result.message as? NotifyMessage)?.message ?: "Unknown error"
+                    _screenState.value = _screenState.value.copy(errorMessage = errorMessage)
+                }
+                is ApiResult.NetworkError -> {
+                    _screenState.value = _screenState.value.copy(errorMessage = "Network error")
+                }
             }
         }
     }

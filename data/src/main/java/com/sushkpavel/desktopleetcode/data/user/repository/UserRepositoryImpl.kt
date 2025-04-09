@@ -45,7 +45,8 @@ class UserRepositoryImpl(override val client: HttpClient) : NetworkRepository(cl
             url = UserApiGateway.REGISTER,
             configureRequest = {
                 setBody(user)
-            }
+            },
+            handleError = { errorBody -> ApiResult.Error(errorBody) }
         )
     }
 
