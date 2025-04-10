@@ -1,5 +1,6 @@
 package com.sushkpavel.leetcode.presentation.screens.login
 
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,16 +28,40 @@ import com.sushkpavel.leetcode.presentation.navigation.routes.Routes
 import com.sushkpavel.leetcode.presentation.util.CustomClickableText
 import org.koin.compose.viewmodel.koinViewModel
 import com.sushkpavel.leetcode.presentation.util.CustomTextInputField
+import com.sushkpavel.leetcode.presentation.util.EmailField
+import com.sushkpavel.leetcode.presentation.util.ErrorMessage
+import com.sushkpavel.leetcode.presentation.util.PasswordField
+
 
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = koinViewModel(),
-    navHostController: NavHostController = rememberNavController()
+    navHostController: NavHostController = rememberNavController(),
+    onLoginSuccess: () -> Unit = { navHostController.navigate(Routes.TaskScreen) },
+    onNavigateToRegistration: () -> Unit = { navHostController.navigate(Routes.ScreenRegistration) }
 ) {
     val screenState by viewModel.screenState
 
+    LoginContent(
+        screenState = screenState,
+        onEmailChanged = viewModel::onEmailChanged,
+        onPasswordChanged = viewModel::onPasswordChanged,
+        onLoginClick = { viewModel.onLoginClicked(onLoginSuccess) },
+        onNavigateToRegistration = onNavigateToRegistration
+    )
+}
+
+@Composable
+private fun LoginContent(
+    screenState: LoginScreenState,
+    onEmailChanged: (String) -> Unit,
+    onPasswordChanged: (String) -> Unit,
+    onLoginClick: () -> Unit,
+    onNavigateToRegistration: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -44,14 +69,6 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-
-//            Icon(
-//                painter = painterResource("ic_logo.xml"),
-//                contentDescription = "App Logo",
-//                modifier = Modifier.size(64.dp),
-//                tint = MaterialTheme.colors.primary
-//            )
-
             Text(
                 text = "Kursachelo",
                 style = MaterialTheme.typography.h5,
@@ -59,75 +76,104 @@ fun LoginScreen(
                 modifier = Modifier.padding(16.dp)
             )
 
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                CustomTextInputField(
-                    value = screenState.email,
-                    onValueChange = { viewModel.onEmailChanged(it) },
-                    label = "Email",
-                    placeholder = "your.email@example.com",
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Email,
-                            contentDescription = null,
-                            tint = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
-                        )
-                    },
-                    isError = screenState.errorMessage.isNotEmpty(),
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                CustomTextInputField(
-                    value = screenState.password,
-                    onValueChange = { viewModel.onPasswordChanged(it) },
-                    label = "Password",
-                    placeholder = "••••••••",
-                    isPassword = true,
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Lock,
-                            contentDescription = null,
-                            tint = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
-                        )
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Button(
-                    onClick = {
-                        viewModel.onLoginClicked(onSuccess = {
-//                        navHostController.navigate()
-                            println("success")
-                        })
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(44.dp),
-                    shape = MaterialTheme.shapes.small,
-                    elevation = ButtonDefaults.elevation(
-                        defaultElevation = 0.dp,
-                        pressedElevation = 2.dp
-                    )
-                ) {
-                    Text("Continue", style = MaterialTheme.typography.button)
-                }
-            }
-            CustomClickableText(
-                text = "Don't have an account?",
-                onClick = {
-                    navHostController.navigate(Routes.ScreenRegistration)
-                }
+            LoginForm(
+                screenState = screenState,
+                onEmailChanged = onEmailChanged,
+                onPasswordChanged = onPasswordChanged,
+                onLoginClick = onLoginClick,
+                onNavigateToRegistration = onNavigateToRegistration
             )
-
-            if (screenState.errorMessage.isNotEmpty()) {
-                Text(
-                    text = screenState.errorMessage,
-                    color = MaterialTheme.colors.error,
-                    style = MaterialTheme.typography.caption
-                )
-            }
         }
+    }
+}
+
+@Composable
+private fun LoginForm(
+    screenState: LoginScreenState,
+    onEmailChanged: (String) -> Unit,
+    onPasswordChanged: (String) -> Unit,
+    onLoginClick: () -> Unit,
+    onNavigateToRegistration: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        EmailField(
+            value = screenState.email,
+            onValueChange = onEmailChanged,
+            isError = screenState.errorMessage.isNotEmpty()
+        )
+
+        PasswordField(
+            value = screenState.password,
+            onValueChange = onPasswordChanged
+        )
+
+        LoginButton(onClick = onLoginClick)
+
+        CustomClickableText("Don't have account?",onNavigateToRegistration, modifier = modifier)
+
+
+        ErrorMessage(errorMessage = screenState.errorMessage)
+    }
+}
+
+@Composable
+private fun LoginButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Button(
+        onClick = onClick,
+        modifier = modifier
+            .fillMaxWidth()
+            .height(44.dp),
+        shape = MaterialTheme.shapes.small,
+        elevation = ButtonDefaults.elevation(
+            defaultElevation = 0.dp,
+            pressedElevation = 2.dp
+        )
+    ) {
+        Text("Continue", style = MaterialTheme.typography.button)
+    }
+}
+
+
+
+@Preview
+@Composable
+fun LoginScreenPreview() {
+    MaterialTheme {
+        LoginContent(
+            screenState = LoginScreenState(
+                email = "test@example.com",
+                password = "password123",
+                errorMessage = ""
+            ),
+            onEmailChanged = {},
+            onPasswordChanged = {},
+            onLoginClick = {},
+            onNavigateToRegistration = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun LoginScreenErrorPreview() {
+    MaterialTheme {
+        LoginContent(
+            screenState = LoginScreenState(
+                email = "invalid-email",
+                password = "",
+                errorMessage = "Invalid credentials"
+            ),
+            onEmailChanged = {},
+            onPasswordChanged = {},
+            onLoginClick = {},
+            onNavigateToRegistration = {}
+        )
     }
 }
