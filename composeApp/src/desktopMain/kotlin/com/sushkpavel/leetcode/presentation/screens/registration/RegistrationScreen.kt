@@ -11,13 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -27,7 +22,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.sushkpavel.leetcode.presentation.navigation.routes.Routes
 import com.sushkpavel.leetcode.presentation.util.CustomClickableText
-import com.sushkpavel.leetcode.presentation.util.CustomTextInputField
 import com.sushkpavel.leetcode.presentation.util.EmailField
 import com.sushkpavel.leetcode.presentation.util.ErrorMessage
 import com.sushkpavel.leetcode.presentation.util.PasswordField

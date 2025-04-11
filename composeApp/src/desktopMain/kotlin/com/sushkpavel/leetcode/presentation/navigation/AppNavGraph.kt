@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import com.sushkpavel.leetcode.presentation.navigation.routes.Routes
 import com.sushkpavel.leetcode.presentation.screens.login.LoginScreen
 import com.sushkpavel.leetcode.presentation.screens.registration.RegistrationScreen
+import com.sushkpavel.leetcode.presentation.screens.task.TaskScreen
 
 @Composable
 fun AppNavGraph(navController: NavHostController, paddingValues: PaddingValues) {
@@ -45,6 +46,16 @@ fun AppNavGraph(navController: NavHostController, paddingValues: PaddingValues) 
             }
         ) {
             RegistrationScreen(navHostController = navController)
+        }
+        composable<Routes.TaskScreen>(
+            enterTransition = {
+                slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left)
+            },
+            exitTransition = {
+                slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left)
+            }
+        ) {
+            TaskScreen(navHostController = navController)
         }
     }
 }
