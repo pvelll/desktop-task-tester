@@ -14,6 +14,8 @@ val viewModelModule = module{
         RegistrationViewModel(get())
     }
     viewModel<TaskViewModel>{
-        TaskViewModel(get())
+        TaskViewModel(
+            get(),get()
+        )
     }
 }

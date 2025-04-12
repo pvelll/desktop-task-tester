@@ -1,15 +1,21 @@
 package com.sushkpavel.leetcode.presentation.screens.task
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -35,6 +41,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
+import com.sushkpavel.desktopleetcode.domain.model.task.Difficulty
+import com.sushkpavel.desktopleetcode.domain.model.task.Task
+import java.time.Instant
 
 @Composable
 fun TaskScreen(
@@ -47,23 +56,27 @@ fun TaskScreen(
     val screenState by viewModel.screenState.collectAsState()
 
     TaskScreenContent(
+        task = screenState.task,
         code = screenState.code,
         language = screenState.language,
         parser = parser,
         theme = theme,
         onCodeChanged = viewModel::onCodeChanged,
+        onGetTask = viewModel::onGetTask,
         onLanguageChanged = viewModel::onLanguageChanged
     )
 }
 
 @Composable
 fun TaskScreenContent(
+    task: Task,
     code: String,
     language: CodeLang,
     parser: PrettifyParser,
     theme: CodeTheme,
     onCodeChanged: (String) -> Unit,
     onLanguageChanged: (CodeLang) -> Unit,
+    onGetTask: (Difficulty) -> Unit,
     modifier: Modifier = Modifier
 ) {
     fun parse(code: String): AnnotatedString {
@@ -74,12 +87,16 @@ fun TaskScreenContent(
             code = code
         )
     }
+
     var currentLanguage by remember { mutableStateOf(language) }
+    var currentDifficulty by remember { mutableStateOf(task.difficulty) }
     var textValue by remember { mutableStateOf(code) }
-    var expanded by remember { mutableStateOf(false) }
+    var languageExpanded by remember { mutableStateOf(false) }
+    var difficultyExpanded by remember { mutableStateOf(false) }
     var textFieldValue by remember { mutableStateOf(TextFieldValue(parse(code))) }
     var lineTops by remember { mutableStateOf(emptyArray<Float>()) }
     val density = LocalDensity.current
+    val scrollState = rememberScrollState()
 
     LaunchedEffect(code, language) {
         if (code != textValue || language != currentLanguage) {
@@ -88,44 +105,126 @@ fun TaskScreenContent(
         }
     }
 
-    Column(modifier = modifier.fillMaxSize()) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .wrapContentSize(Alignment.TopStart)
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
+            .padding(16.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            OutlinedButton(
-                onClick = { expanded = true },
-                modifier = Modifier.fillMaxWidth()
+            Box(
+                modifier = Modifier
+                    .weight(1f)
             ) {
-                Text(currentLanguage.name)
-                Icon(
-                    imageVector = if (expanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
-                    contentDescription = null
-                )
-            }
+                OutlinedButton(
+                    onClick = { languageExpanded = true },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(currentLanguage.name)
+                    Icon(
+                        imageVector = if (languageExpanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
+                        contentDescription = null
+                    )
+                }
 
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                CodeLang.entries.forEach { lang ->
-                    DropdownMenuItem(
-                        onClick = {
-                            currentLanguage = lang
-                            onLanguageChanged(lang)
-                            expanded = false
+                DropdownMenu(
+                    expanded = languageExpanded,
+                    onDismissRequest = { languageExpanded = false },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    CodeLang.entries.forEach { lang ->
+                        DropdownMenuItem(
+                            onClick = {
+                                currentLanguage = lang
+                                onLanguageChanged(lang)
+                                languageExpanded = false
+                            }
+                        ) {
+                            Text(lang.name)
                         }
-                    ) {
-                        Text(lang.name)
                     }
                 }
             }
+
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+            ) {
+                OutlinedButton(
+                    onClick = { difficultyExpanded = true },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(currentDifficulty.name)
+                    Icon(
+                        imageVector = if (difficultyExpanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
+                        contentDescription = null
+                    )
+                }
+
+                DropdownMenu(
+                    expanded = difficultyExpanded,
+                    onDismissRequest = { difficultyExpanded = false },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Difficulty.entries.forEach { difficulty ->
+                        DropdownMenuItem(
+                            onClick = {
+                                currentDifficulty = difficulty
+                                difficultyExpanded = false
+                            }
+                        ) {
+                            Text(difficulty.name)
+                        }
+                    }
+                }
+            }
+
+            Button(
+                onClick = { onGetTask(currentDifficulty) },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("Get Task")
+            }
         }
 
-        Row {
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        ) {
+            Text(
+                text = task.id.toString() + "." + task.title,
+                style = MaterialTheme.typography.h6,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+
+            Text(
+                text = task.description,
+                style = MaterialTheme.typography.body1,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+
+            if (task.examples.isNotBlank()) {
+                Text(
+                    text = "Examples:",
+                    style = MaterialTheme.typography.subtitle1,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+                Text(
+                    text = task.examples,
+                    style = MaterialTheme.typography.body2
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(modifier = Modifier.fillMaxWidth()) {
             if (lineTops.isNotEmpty()) {
                 Box(modifier = Modifier.padding(horizontal = 4.dp)) {
                     lineTops.forEachIndexed { index, top ->
@@ -138,7 +237,9 @@ fun TaskScreenContent(
                 }
             }
             BasicTextField(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = 200.dp),
                 value = textFieldValue,
                 onValueChange = {
                     textFieldValue = it.copy(annotatedString = parse(it.text))
@@ -148,6 +249,15 @@ fun TaskScreenContent(
                     lineTops = Array(result.lineCount) { result.getLineTop(it) }
                 }
             )
+        }
+
+        Button(
+            onClick = { /* Handle submit */ },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp)
+        ) {
+            Text("Submit Solution")
         }
     }
 }
@@ -159,9 +269,18 @@ fun TaskScreenContentPreview() {
     val theme = remember { CodeThemeType.Default.theme }
 
     TaskScreenContent(
+        task = Task(
+            id = 1,
+            title = "Sample Task",
+            description = "Write a function that calculates the sum of two numbers",
+            examples = "Input: 2, 3\nOutput: 5",
+            createdAt = Instant.now(),
+            updatedAt = Instant.now(),
+            difficulty = Difficulty.MEDIUM
+        ),
         code = """
-            fun main() {
-                println("Hello World")
+            fun sum(a: Int, b: Int): Int {
+                return a + b
             }
         """.trimIndent(),
         language = CodeLang.Kotlin,
@@ -169,6 +288,7 @@ fun TaskScreenContentPreview() {
         theme = theme,
         onCodeChanged = {},
         onLanguageChanged = {},
+        onGetTask = {},
         modifier = Modifier
     )
 }

@@ -2,7 +2,12 @@ package com.sushkpavel.leetcode.presentation.screens.task
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sushkpavel.desktopleetcode.domain.model.ApiResult
+import com.sushkpavel.desktopleetcode.domain.model.NotifyMessage
+import com.sushkpavel.desktopleetcode.domain.model.task.Difficulty
+import com.sushkpavel.desktopleetcode.domain.model.task.Task
 import com.sushkpavel.desktopleetcode.domain.usecase.submission.SubmitTaskUseCase
+import com.sushkpavel.desktopleetcode.domain.usecase.task.GetTaskUseCase
 import com.wakaztahir.codeeditor.model.CodeLang
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,7 +16,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class TaskViewModel(
-    private val submitTaskUseCase: SubmitTaskUseCase
+    private val submitTaskUseCase: SubmitTaskUseCase,
+    private val getTaskUseCase: GetTaskUseCase
 ) : ViewModel() {
     private val _screenState = MutableStateFlow(TaskScreenState("", CodeLang.Kotlin))
     val screenState: StateFlow<TaskScreenState> = _screenState.asStateFlow()
@@ -34,6 +40,31 @@ class TaskViewModel(
                 _screenState.update { it.copy(error = e.message) }
             } finally {
                 _screenState.update { it.copy(isLoading = false) }
+            }
+        }
+    }
+
+    fun onGetTask(difficulty: Difficulty) {
+        viewModelScope.launch {
+            when (val result = getTaskUseCase(difficulty)) {
+                is ApiResult.Success -> {
+                    val task = result.data
+                    _screenState.value = task?.let {
+                        _screenState.value.copy(
+                            task = it
+                        )
+                    }!!
+                }
+
+                is ApiResult.Error -> {
+                    val errorMessage =
+                        (result.message as? NotifyMessage)?.message ?: "Unknown error"
+                    _screenState.value = _screenState.value.copy(error = errorMessage)
+                }
+
+                ApiResult.NetworkError -> {
+                    _screenState.value = _screenState.value.copy(error = "Network error")
+                }
             }
         }
     }
