@@ -36,6 +36,7 @@ kotlin {
             implementation(project(":data"))
             implementation(project(":domain"))
         }
+
         val desktopMain by getting{
             dependencies {
                 implementation(compose.desktop.currentOs)
