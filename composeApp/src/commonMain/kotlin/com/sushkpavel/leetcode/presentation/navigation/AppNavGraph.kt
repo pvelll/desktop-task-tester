@@ -10,13 +10,17 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.sushkpavel.leetcode.presentation.navigation.routes.Routes
 import com.sushkpavel.leetcode.presentation.screens.login.LoginScreen
 import com.sushkpavel.leetcode.presentation.screens.registration.RegistrationScreen
 import com.sushkpavel.leetcode.presentation.screens.task.TaskScreen
 
 @Composable
-fun AppNavGraph(navController: NavHostController, paddingValues: PaddingValues) {
+fun AppNavGraph(
+    navController: NavHostController = rememberNavController(),
+    paddingValues: PaddingValues
+) {
     NavHost(
         navController = navController,
         startDestination = Routes.ScreenLogin,

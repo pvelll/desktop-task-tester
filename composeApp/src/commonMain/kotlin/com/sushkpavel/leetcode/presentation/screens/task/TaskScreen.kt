@@ -1,6 +1,7 @@
 package com.sushkpavel.leetcode.presentation.screens.task
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,8 +13,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
@@ -38,12 +41,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
+import com.sushkpavel.desktopleetcode.domain.model.submission.TestResult
 import com.sushkpavel.desktopleetcode.domain.model.task.Difficulty
 import com.sushkpavel.desktopleetcode.domain.model.task.Task
+import com.sushkpavel.leetcode.utils.toPrettyString
 import java.time.Instant
+import java.time.ZoneOffset
 
 @Composable
 fun TaskScreen(
@@ -57,25 +64,29 @@ fun TaskScreen(
 
     TaskScreenContent(
         task = screenState.task,
+        testResult = screenState.testResult,
         code = screenState.code,
         language = screenState.language,
         parser = parser,
         theme = theme,
         onCodeChanged = viewModel::onCodeChanged,
         onGetTask = viewModel::onGetTask,
-        onLanguageChanged = viewModel::onLanguageChanged
+        onLanguageChanged = viewModel::onLanguageChanged,
+        onSubmit = viewModel::submitTask
     )
 }
 
 @Composable
 fun TaskScreenContent(
-    task: Task,
+    task: Task?,
+    testResult: TestResult?,
     code: String,
     language: CodeLang,
     parser: PrettifyParser,
     theme: CodeTheme,
     onCodeChanged: (String) -> Unit,
     onLanguageChanged: (CodeLang) -> Unit,
+    onSubmit: () -> Unit,
     onGetTask: (Difficulty) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -89,7 +100,7 @@ fun TaskScreenContent(
     }
 
     var currentLanguage by remember { mutableStateOf(language) }
-    var currentDifficulty by remember { mutableStateOf(task.difficulty) }
+    var currentDifficulty by remember { mutableStateOf(Difficulty.EASY) }
     var textValue by remember { mutableStateOf(code) }
     var languageExpanded by remember { mutableStateOf(false) }
     var difficultyExpanded by remember { mutableStateOf(false) }
@@ -192,36 +203,38 @@ fun TaskScreenContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-        ) {
-            Text(
-                text = task.id.toString() + "." + task.title,
-                style = MaterialTheme.typography.h6,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-
-            Text(
-                text = task.description,
-                style = MaterialTheme.typography.body1,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-
-            if (task.examples.isNotBlank()) {
+        task?.let {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            ) {
                 Text(
-                    text = "Examples:",
-                    style = MaterialTheme.typography.subtitle1,
-                    modifier = Modifier.padding(bottom = 4.dp)
+                    text = task.id.toString() + "." + task.title,
+                    style = MaterialTheme.typography.h6,
+                    modifier = Modifier.padding(bottom = 8.dp)
                 )
+
                 Text(
-                    text = task.examples,
-                    style = MaterialTheme.typography.body2
+                    text = task.description,
+                    style = MaterialTheme.typography.body1,
+                    modifier = Modifier.padding(bottom = 8.dp)
                 )
+
+                if (task.examples.isNotBlank()) {
+                    Text(
+                        text = "Examples:",
+                        style = MaterialTheme.typography.subtitle1,
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
+                    Text(
+                        text = task.examples,
+                        style = MaterialTheme.typography.body2
+                    )
+                }
             }
-        }
 
+        }
         Spacer(modifier = Modifier.height(16.dp))
 
         Row(modifier = Modifier.fillMaxWidth()) {
@@ -252,15 +265,41 @@ fun TaskScreenContent(
         }
 
         Button(
-            onClick = { /* Handle submit */ },
+            onClick = onSubmit,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp)
         ) {
             Text("Submit Solution")
         }
+
+        testResult?.let {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.padding(24.dp)
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .background(
+                        shape = RoundedCornerShape(corner = CornerSize(12.dp)),
+                        color = if(it.success) Color.Green else Color.Red
+                    )
+            ){
+                Column(
+                    modifier = Modifier.padding(12.dp)
+                ) {
+                    Text("Actual Result: ${it.actualResult}")
+                    Text("Task id: ${it.taskId}")
+                    Text("User id: ${it.userId}")
+                    Text("Date: ${it.createdAt.toPrettyString()}")
+                }
+            }
+        }
+
     }
 }
+
+
+
 
 @Preview
 @Composable
@@ -289,6 +328,8 @@ fun TaskScreenContentPreview() {
         onCodeChanged = {},
         onLanguageChanged = {},
         onGetTask = {},
-        modifier = Modifier
+        onSubmit = {},
+        modifier = Modifier,
+        testResult = TestResult(1,1,1,1,"string", false, Instant.now())
     )
 }

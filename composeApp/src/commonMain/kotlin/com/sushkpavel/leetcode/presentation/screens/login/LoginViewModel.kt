@@ -9,6 +9,7 @@ import com.sushkpavel.desktopleetcode.domain.model.NotifyMessage
 import com.sushkpavel.desktopleetcode.domain.model.user.Credentials
 import com.sushkpavel.desktopleetcode.domain.usecase.user.LoginUseCase
 import com.sushkpavel.leetcode.presentation.util.hash.sha256
+import com.sushkpavel.leetcode.utils.saveToken
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
@@ -47,6 +48,7 @@ class LoginViewModel(
             )
             when (result) {
                 is ApiResult.Success -> {
+                    saveToken(result.data.token)
                     onSuccess()
                 }
                 is ApiResult.Error -> {

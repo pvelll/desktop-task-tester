@@ -4,10 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sushkpavel.desktopleetcode.domain.model.ApiResult
 import com.sushkpavel.desktopleetcode.domain.model.NotifyMessage
+import com.sushkpavel.desktopleetcode.domain.model.submission.SubmissionRequest
+import com.sushkpavel.desktopleetcode.domain.model.submission.TestResult
 import com.sushkpavel.desktopleetcode.domain.model.task.Difficulty
-import com.sushkpavel.desktopleetcode.domain.model.task.Task
 import com.sushkpavel.desktopleetcode.domain.usecase.submission.SubmitTaskUseCase
 import com.sushkpavel.desktopleetcode.domain.usecase.task.GetTaskUseCase
+import com.sushkpavel.leetcode.utils.getToken
 import com.wakaztahir.codeeditor.model.CodeLang
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,8 +36,39 @@ class TaskViewModel(
         viewModelScope.launch {
             _screenState.update { it.copy(isLoading = true) }
             try {
-//                submitTaskUseCase(_screenState.value.code, _screenState.value.language)
-                // Handle success
+                val testResult = _screenState.value.task?.id?.let {
+                    SubmissionRequest(
+                        taskId = it.toInt(),
+                        code = _screenState.value.code,
+                        language = _screenState.value.language.name.lowercase()
+                    )
+                }?.let {
+                    submitTaskUseCase(
+                        it,
+                        getToken()
+                    )
+                }
+                when (testResult) {
+                    is ApiResult.Error -> {
+                        println("error $testResult")
+                        _screenState.update {
+                            it.copy(error = (testResult.message as NotifyMessage).message)
+                        }
+                    }
+
+                    ApiResult.NetworkError -> {
+                        println("network error $testResult")
+                        _screenState.update {
+                            it.copy(error = "Achtung! Error")
+                        }
+                    }
+
+                    is ApiResult.Success<TestResult> -> _screenState.update {
+                        it.copy(testResult = testResult.data)
+                    }
+
+                    null -> Unit
+                }
             } catch (e: Exception) {
                 _screenState.update { it.copy(error = e.message) }
             } finally {

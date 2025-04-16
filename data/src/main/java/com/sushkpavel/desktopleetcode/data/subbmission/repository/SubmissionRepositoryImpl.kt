@@ -25,7 +25,7 @@ class SubmissionRepositoryImpl(override val client : HttpClient) : NetworkReposi
                 contentType(ContentType.Application.Json)
                 setBody(submissionRequest)
                 headers {
-                    append(HttpHeaders.Authorization, token)
+                    append(HttpHeaders.Authorization, "Bearer $token")
                 }
             }
         )
