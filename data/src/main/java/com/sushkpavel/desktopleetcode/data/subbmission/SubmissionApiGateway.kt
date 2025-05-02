@@ -1,5 +1,5 @@
 package com.sushkpavel.desktopleetcode.data.subbmission
 
 object SubmissionApiGateway {
-    const val SUBMIT = "http://127.0.0.1:8083/submit"
+    const val SUBMIT = "https://127.0.0.1:443/submission/submit"
 }

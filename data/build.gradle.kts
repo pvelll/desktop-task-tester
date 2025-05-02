@@ -21,4 +21,6 @@ dependencies{
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json.client)
     implementation(libs.kotlinx.serialization.json.jvm)
+    implementation(project(":domain"))
+    implementation(project(":domain"))
 }
