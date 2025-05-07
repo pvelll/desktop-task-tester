@@ -1,6 +1,6 @@
 [versions]
 androidx-lifecycle = "2.8.4"
-compose-multiplatform = "1.7.3"
+compose-multiplatform = "1.8.0"
 junit = "4.13.2"
 kotlin = "2.1.10"
 kotlinx-coroutines = "1.10.1"
@@ -30,7 +30,7 @@ ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negoti
 ktor-serialization-kotlinx-json-client = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor-version" }
 compose-code-editor = {module = "com.wakaztahir:codeeditor", version.ref="codeeditor"}
 navigation-compose = {module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref="navigation"}
-material-icons-extended = {module = "org.jetbrains.compose.material:material-icons-extended", version.ref="compose-multiplatform"}
+material-icons-extended = {module = "org.jetbrains.compose.material:material-icons-extended", version="1.7.3"}
 
 [plugins]
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }

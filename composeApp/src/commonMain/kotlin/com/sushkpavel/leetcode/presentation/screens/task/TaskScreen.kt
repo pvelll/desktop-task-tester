@@ -49,10 +49,7 @@ import com.sushkpavel.desktopleetcode.domain.model.submission.TestResult
 import com.sushkpavel.desktopleetcode.domain.model.task.Difficulty
 import com.sushkpavel.desktopleetcode.domain.model.task.Task
 import com.sushkpavel.leetcode.utils.toPrettyString
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.selects.whileSelect
 import java.time.Instant
-import java.time.ZoneOffset
 
 @Composable
 fun TaskScreen(
@@ -60,8 +57,8 @@ fun TaskScreen(
     navHostController: NavHostController
 ) {
     val parser = remember { PrettifyParser() }
-    val themeState = remember { mutableStateOf(CodeThemeType.Default) }
-    val theme = remember(themeState.value) { themeState.value.theme }
+    val themeState by remember { mutableStateOf(CodeThemeType.Default) }
+    val theme = remember(themeState) { themeState.theme }
     val screenState by viewModel.screenState.collectAsState()
 
     TaskScreenContent(

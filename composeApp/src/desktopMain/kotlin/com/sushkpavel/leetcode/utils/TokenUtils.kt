@@ -5,39 +5,43 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.util.Properties
 
-val rootPath = File(".").absolutePath
-val appConfigPath = "$rootPath/app.properties"
-val appProps = Properties()
+val appConfigPath = "${File(".").absolutePath}/app.properties"
 
 fun ensureConfigFileExists() {
-    val configFile = File(appConfigPath)
-    if (!configFile.exists()) {
-        configFile.createNewFile()
+    File(appConfigPath).let {
+        if (!it.exists()) {
+            it.createNewFile()
+        }
     }
 }
 
 actual fun saveToken(token: String) {
     ensureConfigFileExists()
-    println(rootPath)
-    appProps.load(FileInputStream(appConfigPath))
-    appProps.setProperty("token", token)
-    appProps.store(FileOutputStream(appConfigPath), null)
+    Properties().apply {
+        load(FileInputStream(appConfigPath))
+        setProperty("token", token)
+        store(FileOutputStream(appConfigPath), null)
+    }
     println("Token saved: $token")
 }
 
 actual fun getToken(): String {
     ensureConfigFileExists()
-    appProps.load(FileInputStream(appConfigPath))
-    val token = appProps.getProperty("token", "")
-    println(token)
-    return token
+    return Properties().run {
+        load(FileInputStream(appConfigPath))
+        getProperty("token", "")
+    }.also {
+        println(it)
+    }
 }
 
 actual fun removeToken() {
     ensureConfigFileExists()
-    appProps.load(FileInputStream(appConfigPath))
-    appProps.remove("token")
-    appProps.store(FileOutputStream(appConfigPath), null)
+    Properties().apply {
+        load(FileInputStream(appConfigPath))
+        remove("token")
+        store(FileOutputStream(appConfigPath), null)
+    }
     println("Token removed")
 }
 

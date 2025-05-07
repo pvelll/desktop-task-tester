@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -40,7 +41,7 @@ fun LoginScreen(
     onLoginSuccess: () -> Unit = { navHostController.navigate(Routes.TaskScreen) },
     onNavigateToRegistration: () -> Unit = { navHostController.navigate(Routes.ScreenRegistration) }
 ) {
-    val screenState by viewModel.screenState
+    val screenState by remember { viewModel.screenState }
 
     LoginContent(
         screenState = screenState,

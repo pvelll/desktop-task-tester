@@ -15,6 +15,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -35,7 +36,7 @@ fun RegistrationScreen(
     onRegistrationSuccess: () -> Unit = { navHostController.navigate(Routes.ScreenLogin) },
     onNavigateToLogin: () -> Unit = { navHostController.navigate(Routes.ScreenLogin) }
 ) {
-    val screenState by viewModel.screenState
+    val screenState by remember {viewModel.screenState}
 
     RegistrationContent(
         screenState = screenState,
