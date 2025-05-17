@@ -9,8 +9,8 @@ import java.time.Instant
 
 @Serializable
 data class TaskScreenState(
-    val code: String,
-    val language: CodeLang,
+    val code: String = "",
+    val language: CodeLang = CodeLang.CPP,
     val isLoading: Boolean = false,
     val error: String? = null,
     val task : Task? = null,

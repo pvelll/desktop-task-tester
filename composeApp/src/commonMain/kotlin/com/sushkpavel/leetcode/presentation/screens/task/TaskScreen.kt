@@ -45,10 +45,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sushkpavel.desktopleetcode.domain.model.submission.TestResult
 import com.sushkpavel.desktopleetcode.domain.model.task.Difficulty
 import com.sushkpavel.desktopleetcode.domain.model.task.Task
 import com.sushkpavel.leetcode.utils.toPrettyString
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.stateIn
 import java.time.Instant
 
 @Composable
@@ -59,7 +62,7 @@ fun TaskScreen(
     val parser = remember { PrettifyParser() }
     val themeState by remember { mutableStateOf(CodeThemeType.Default) }
     val theme = remember(themeState) { themeState.theme }
-    val screenState by viewModel.screenState.collectAsState()
+    val screenState by viewModel.screenState.collectAsStateWithLifecycle()
 
     TaskScreenContent(
         task = screenState.task,

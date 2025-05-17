@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Kursach</string>
+    <string name="project_name">Облачная платформа для автоматизированного тестирования программного кода</string>
     <string name="title">Application</string>
 </resources>

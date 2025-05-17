@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -32,6 +33,11 @@ import com.sushkpavel.leetcode.presentation.util.CustomTextInputField
 import com.sushkpavel.leetcode.presentation.util.EmailField
 import com.sushkpavel.leetcode.presentation.util.ErrorMessage
 import com.sushkpavel.leetcode.presentation.util.PasswordField
+import desktopleetcode.composeapp.generated.resources.Res
+import desktopleetcode.composeapp.generated.resources.app_name
+import desktopleetcode.composeapp.generated.resources.project_name
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 
 
 @Composable
@@ -66,12 +72,12 @@ private fun LoginContent(
         contentAlignment = Alignment.Center
     ) {
         Column(
-            modifier = Modifier.widthIn(max = 400.dp).padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                text = "Kursachelo",
+                text = stringResource(Res.string.project_name),
+                textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.h5,
                 color = MaterialTheme.colors.onSurface.copy(alpha = 0.8f),
                 modifier = Modifier.padding(16.dp)
@@ -98,7 +104,7 @@ private fun LoginForm(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier.fillMaxWidth(),
+        modifier = Modifier.widthIn(max = 400.dp).padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         EmailField(

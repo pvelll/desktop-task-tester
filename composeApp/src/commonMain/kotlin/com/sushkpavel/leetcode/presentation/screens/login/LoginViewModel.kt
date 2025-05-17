@@ -10,7 +10,9 @@ import com.sushkpavel.desktopleetcode.domain.model.user.Credentials
 import com.sushkpavel.desktopleetcode.domain.usecase.user.LoginUseCase
 import com.sushkpavel.leetcode.presentation.util.hash.sha256
 import com.sushkpavel.leetcode.utils.saveToken
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LoginViewModel(
     private val loginUseCase: LoginUseCase
@@ -39,7 +41,7 @@ class LoginViewModel(
     }
 
     fun onLoginClicked(onSuccess: () -> Unit) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val result = loginUseCase(
                 Credentials(
                     _screenState.value.email,
@@ -49,7 +51,9 @@ class LoginViewModel(
             when (result) {
                 is ApiResult.Success -> {
                     saveToken(result.data.token)
-                    onSuccess()
+                    withContext(Dispatchers.Main.immediate){
+                        onSuccess()
+                    }
                 }
                 is ApiResult.Error -> {
                     val errorMessage = (result.message as? NotifyMessage)?.message ?: "Unknown error"
@@ -61,4 +65,7 @@ class LoginViewModel(
             }
         }
     }
+
+
 }
+

@@ -10,6 +10,7 @@ import com.sushkpavel.desktopleetcode.domain.model.user.Role
 import com.sushkpavel.desktopleetcode.domain.model.user.UserDTO
 import com.sushkpavel.desktopleetcode.domain.usecase.user.RegisterUseCase
 import com.sushkpavel.leetcode.presentation.util.hash.sha256
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class RegistrationViewModel(private val registerUseCase: RegisterUseCase) : ViewModel() {
@@ -44,7 +45,7 @@ class RegistrationViewModel(private val registerUseCase: RegisterUseCase) : View
     }
 
     fun onRegisterClicked(onSuccess: () -> Unit) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val result = registerUseCase(
                 UserDTO(
                     email = _screenState.value.email,
