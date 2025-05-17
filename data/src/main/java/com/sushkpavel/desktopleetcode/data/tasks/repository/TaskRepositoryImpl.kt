@@ -13,12 +13,13 @@ import io.ktor.client.request.parameter
 import io.ktor.http.HttpMethod
 
 class TaskRepositoryImpl(client: HttpClient) : NetworkRepository(client), TaskRepository {
-    override suspend fun getTask(difficulty: Difficulty): ApiResult<Task?> {
+    override suspend fun getTask(difficulty: Difficulty, current : Long): ApiResult<Task?> {
         return executeRequest<Task, NotifyMessage>(
             method = HttpMethod.Get,
             url = TaskApiGateway.TASK,
             configureRequest = {
                 parameter("difficulty", difficulty.name)
+                parameter("current", current)
             }
         )
     }

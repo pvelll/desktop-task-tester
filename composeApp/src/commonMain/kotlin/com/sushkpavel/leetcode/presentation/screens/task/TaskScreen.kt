@@ -21,7 +21,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,8 +49,6 @@ import com.sushkpavel.desktopleetcode.domain.model.submission.TestResult
 import com.sushkpavel.desktopleetcode.domain.model.task.Difficulty
 import com.sushkpavel.desktopleetcode.domain.model.task.Task
 import com.sushkpavel.leetcode.utils.toPrettyString
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.stateIn
 import java.time.Instant
 
 @Composable
@@ -89,7 +86,7 @@ fun TaskScreenContent(
     onCodeChanged: (String) -> Unit,
     onLanguageChanged: (CodeLang) -> Unit,
     onSubmit: () -> Unit,
-    onGetTask: (Difficulty) -> Unit,
+    onGetTask: (Difficulty, Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     fun parse(code: String): AnnotatedString {
@@ -196,7 +193,11 @@ fun TaskScreenContent(
             }
 
             Button(
-                onClick = { onGetTask(currentDifficulty) },
+                onClick = {
+                    if (task != null) {
+                        onGetTask(currentDifficulty,task.id)
+                    }
+                },
                 modifier = Modifier.weight(1f)
             ) {
                 Text("Get Task")
@@ -329,7 +330,7 @@ fun TaskScreenContentPreview() {
         theme = theme,
         onCodeChanged = {},
         onLanguageChanged = {},
-        onGetTask = {},
+        onGetTask = { _: Difficulty, _: Long -> },
         onSubmit = {},
         modifier = Modifier,
         testResult = TestResult(1,1,1,1,"string", false, Instant.now())

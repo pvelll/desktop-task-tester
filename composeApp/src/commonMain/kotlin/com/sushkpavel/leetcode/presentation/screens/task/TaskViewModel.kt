@@ -15,7 +15,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -27,7 +26,7 @@ class TaskViewModel(
 ) : ViewModel() {
     private val _screenState = MutableStateFlow(TaskScreenState("", CodeLang.Kotlin))
     val screenState: StateFlow<TaskScreenState> = _screenState
-        .onStart { onGetTask(Difficulty.EASY) }
+        .onStart { onGetTask(Difficulty.EASY, Int.MAX_VALUE.toLong()) }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(3000L),
@@ -87,9 +86,9 @@ class TaskViewModel(
         }
     }
 
-    fun onGetTask(difficulty: Difficulty) {
+    fun onGetTask(difficulty: Difficulty, current : Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            when (val result = getTaskUseCase(difficulty)) {
+            when (val result = getTaskUseCase(difficulty, current)) {
                 is ApiResult.Success -> {
                     val task = result.data
                     _screenState.update { it.copy(task = task) }

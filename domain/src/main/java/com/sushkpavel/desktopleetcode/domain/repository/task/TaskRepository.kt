@@ -10,5 +10,5 @@ interface TaskRepository {
     suspend fun createTask(taskDTO: TaskDTO): ApiResult<Task>
     suspend fun deleteTask(taskId: Long): ApiResult<NotifyMessage>
     suspend fun updateTask(taskDTO: TaskDTO): ApiResult<Task>
-    suspend fun getTask(difficulty: Difficulty): ApiResult<Task?>
+    suspend fun getTask(difficulty: Difficulty, current : Long): ApiResult<Task?>
 }
