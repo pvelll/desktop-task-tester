@@ -1,17 +1,22 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlinxSerialization)
 }
 
+
 kotlin {
-    jvm("desktop")
-
+    jvm("desktop") {
+        withJava()
+        compilerOptions{
+            jvmTarget.set(JvmTarget.JVM_21)
+        }
+    }
     sourceSets {
-        val desktopMain by getting
-
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -22,15 +27,25 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.koin.core)
-            implementation(libs.koin.koin.compose.viewmodel)
+            implementation(libs.koin.compose.viewmodel)
             implementation(libs.koin.logger.slf4j)
+            implementation(libs.compose.code.editor)
+            implementation(libs.navigation.compose)
+            implementation(libs.kotlinx.serialization.json.jvm)
+            implementation(libs.material.icons.extended)
+            implementation(project(":data"))
+            implementation(project(":domain"))
         }
-        desktopMain.dependencies {
-            implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutines.swing)
+
+        val desktopMain by getting{
+            dependencies {
+                implementation(compose.desktop.currentOs)
+                implementation(libs.kotlinx.coroutines.swing)
+            }
         }
     }
 }
+
 
 compose.desktop {
     application {
